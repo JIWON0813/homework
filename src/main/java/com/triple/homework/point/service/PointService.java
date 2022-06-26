@@ -2,6 +2,7 @@ package com.triple.homework.point.service;
 
 import com.triple.homework.place.service.PlaceService;
 import com.triple.homework.review.model.ReviewEntity;
+import com.triple.homework.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,17 +12,17 @@ public class PointService {
 
     private final PlaceService placeService;
 
+    private final UserRepository userRepository;
+
     public void checkAddPoint(ReviewEntity result) {
-        if(result.getContent().length() > 0){
+        int point = 0;
+        point += result.getContent().isEmpty() ? 0 : 1;
+        point += result.getAttachedPhotoIds().isEmpty() ? 0 : 1;
 
-        }
-        if(result.getAttachedPhotoIds().length() > 0){
-
-        }
         boolean isFirstPlace = placeService.checkFirstRegisteredUserPlace(result.getPlaceId());
 
-        if(isFirstPlace){
-            // +1
-        }
+        point += isFirstPlace ? 1 : 0;
+
+        //userRepository.save()
     }
 }

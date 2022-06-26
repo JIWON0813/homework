@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -49,13 +50,13 @@ public class ReviewService {
 
     @Transactional
     public int addReview(ReviewDTO reviewDto) throws Exception {
-        ReviewEntity reviewEntity = reviewRepository.findById(reviewDto.getReviewId()).get();
+//        Optional<ReviewEntity> reviewEntity = reviewRepository.findById(reviewDto.getReviewId());
+//
+//        if(reviewEntity != null){
+//            throw new Exception("이미 등록된 리뷰입니다.");
+//        }
 
-        if(reviewEntity != null){
-            throw new Exception("이미 등록된 리뷰입니다.");
-        }
-
-        reviewEntity = ReviewEntity.builder()
+        ReviewEntity reviewEntity = ReviewEntity.builder()
                 .reviewId(reviewDto.getReviewId())
                 .content(reviewDto.getContent())
                 .attachedPhotoIds(String.join("&", reviewDto.getAttachedPhotoIds()))
