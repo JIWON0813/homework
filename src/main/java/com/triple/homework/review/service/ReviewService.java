@@ -74,8 +74,6 @@ public class ReviewService {
         //point text
         pointService.checkAddPoint(result);
 
-        placeService.addUserByPlace(result);
-
         reviewHistoryService.addReviewHistory(result);
 
 

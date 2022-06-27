@@ -1,17 +1,16 @@
 package com.triple.homework.user.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO {
 
-    private String type;
-    private String action;
-    private String reviewId;
-    private String content;
-    private List<String> attachedPhotoIds;
     private String userId;
-    private String placeId;
+    private int point;
 }

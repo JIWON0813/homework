@@ -23,7 +23,7 @@ public class UserEntity {
     private String userId;
 
     @Column(name = "POINT")
-    private String point;
+    private int point;
 
     @Column(name = "WRITE_DT")
     private Date writeDt;

@@ -1,8 +1,12 @@
 package com.triple.homework.point.service;
 
+import com.triple.homework.place.model.PlaceDTO;
 import com.triple.homework.place.service.PlaceService;
 import com.triple.homework.review.model.ReviewEntity;
+import com.triple.homework.user.model.UserDTO;
+import com.triple.homework.user.model.UserEntity;
 import com.triple.homework.user.repository.UserRepository;
+import com.triple.homework.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +18,31 @@ public class PointService {
 
     private final UserRepository userRepository;
 
-    public void checkAddPoint(ReviewEntity result) {
-        int point = 0;
-        point += result.getContent().isEmpty() ? 0 : 1;
-        point += result.getAttachedPhotoIds().isEmpty() ? 0 : 1;
+    private final PointService pointService;
 
-        boolean isFirstPlace = placeService.checkFirstRegisteredUserPlace(result.getPlaceId());
+    private final UserService userService;
+
+    public void checkAddPoint(ReviewEntity reviewEntity) {
+        int point = 0;
+        point += reviewEntity.getContent().isEmpty() ? 0 : 1;
+        point += reviewEntity.getAttachedPhotoIds().isEmpty() ? 0 : 1;
+
+
+        boolean isFirstPlace = placeService.addPlace(new PlaceDTO(reviewEntity.getPlaceId(), reviewEntity.getUserId()));
 
         point += isFirstPlace ? 1 : 0;
 
-        //userRepository.save()
+        addPoint(reviewEntity,point);
+    }
+
+    public void addPoint(ReviewEntity reviewEntity, int point){
+        UserEntity userEntity = userRepository.findById(reviewEntity.getUserId()).orElse(null);
+
+        if(userEntity == null){
+            userService.addUser(new UserDTO(reviewEntity.getUserId(), point));
+            return;
+        }
+
+        userService.modifyPoint(reviewEntity.getUserId(),point);
     }
 }
