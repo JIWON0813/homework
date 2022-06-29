@@ -22,6 +22,9 @@ public class PlaceEntity {
     @Column(name = "USER_ID")
     private String userId;
 
+    @Column(name = "REVIEW_ID")
+    private String reviewId;
+
     @Column(name = "WRITE_DT")
     private Date writeDt;
 

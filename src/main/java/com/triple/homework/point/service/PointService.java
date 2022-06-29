@@ -2,6 +2,7 @@ package com.triple.homework.point.service;
 
 import com.triple.homework.place.model.PlaceDTO;
 import com.triple.homework.place.service.PlaceService;
+import com.triple.homework.point.model.PointDTO;
 import com.triple.homework.review.model.ReviewEntity;
 import com.triple.homework.user.model.UserDTO;
 import com.triple.homework.user.model.UserEntity;
@@ -32,17 +33,17 @@ public class PointService {
 
         point += isFirstPlace ? 1 : 0;
 
-        addPoint(reviewEntity,point);
+        addPoint(reviewEntity.getUserId(),point);
     }
 
-    public void addPoint(ReviewEntity reviewEntity, int point){
-        UserEntity userEntity = userRepository.findById(reviewEntity.getUserId()).orElse(null);
+    public void addPoint(String userId, int point){
+        UserEntity userEntity = userRepository.findById(userId).orElse(null);
 
         if(userEntity == null){
-            userService.addUser(new UserDTO(reviewEntity.getUserId(), point));
+            userService.addUser(new UserDTO(userId, point));
             return;
         }
 
-        userService.modifyPoint(reviewEntity.getUserId(),point);
+        userService.modifyPoint(userId,point);
     }
 }
