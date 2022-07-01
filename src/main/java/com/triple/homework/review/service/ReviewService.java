@@ -127,8 +127,8 @@ public class ReviewService {
         int point = userEntity.getPoint()-1; // 리뷰 등록이 1점
         point -= reviewEntity.getAttachedPhotoIds().isEmpty()? 0 : 1;
 
-        if(placeEntity != null){
-            point -= placeEntity.getUserId().equals(reviewEntity.getUserId()) ? 1 : 0;
+        if(placeEntity != null && placeEntity.getUserId().equals(reviewEntity.getUserId())){
+            point -= 1;
             placeRepository.deleteById(placeEntity.getPlaceId());
         }
 
