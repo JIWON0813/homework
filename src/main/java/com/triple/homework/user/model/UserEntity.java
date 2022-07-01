@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "REVIEW")
+@Table(name = "USER")
 @Builder
 public class UserEntity {
 

@@ -30,7 +30,7 @@ public class ReviewController {
             return ResponseEntity.ok().body("성공");
         }
 
-        return ResponseEntity.ok().body("실패");
+        return ResponseEntity.internalServerError().body("실패");
 
     }
 }

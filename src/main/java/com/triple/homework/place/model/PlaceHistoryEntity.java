@@ -1,8 +1,7 @@
 package com.triple.homework.place.model;
 
-import javax.persistence.Entity;
-
 import lombok.*;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -11,11 +10,18 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "PLACE")
+@Table(name = "PLACE_HISTORY")
 @Builder
-public class PlaceEntity {
+public class PlaceHistoryEntity {
 
     @Id
+    @Column(name = "SEQ")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int seq;
+
+    @Column(name = "STATUS")
+    private char status;
+
     @Column(name = "PLACE_ID")
     private String placeId;
 

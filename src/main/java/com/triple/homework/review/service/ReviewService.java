@@ -26,7 +26,6 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final PointService pointService;
-    private final PlaceService placeService;
     private final UserRepository userRepository;
     private final ReviewHistoryService reviewHistoryService;
     private final PlaceRepository placeRepository;
@@ -54,12 +53,6 @@ public class ReviewService {
 
     @Transactional
     public int addReview(ReviewDTO reviewDto) throws Exception {
-//        Optional<ReviewEntity> reviewEntity = reviewRepository.findById(reviewDto.getReviewId());
-//
-//        if(reviewEntity != null){
-//            throw new Exception("이미 등록된 리뷰입니다.");
-//        }
-
         ReviewEntity reviewEntity = ReviewEntity.builder()
                 .reviewId(reviewDto.getReviewId())
                 .content(reviewDto.getContent())
@@ -88,17 +81,15 @@ public class ReviewService {
 
         // photo update method
         UserEntity userEntity = userRepository.findById(reviewDto.getUserId()).orElse(null);
-        int point = 0;
+        int point = userEntity.getPoint();
 
         if(reviewEntity.getAttachedPhotoIds().isEmpty() && !reviewDto.getAttachedPhotoIds().isEmpty()){
             // 사진을 추가하는 경우 +1점
             point += 1;
-            pointService.addPoint(userEntity.getUserId(),point);
         }
         else if(!reviewEntity.getAttachedPhotoIds().isEmpty() && reviewDto.getAttachedPhotoIds().isEmpty()){
             // 사진을 삭제하는 경우 -1점
             point -= 1;
-            pointService.addPoint(userEntity.getUserId(),point);
         }
 
 
@@ -108,10 +99,14 @@ public class ReviewService {
         reviewEntity.setModifyDt(new Date(System.currentTimeMillis()));
 
         ReviewEntity result = reviewRepository.save(reviewEntity);
+
+
         if(result == null){
             return 0;
         }
 
+        pointService.addPoint(userEntity.getUserId(),point);
+        reviewHistoryService.modifyReviewHistory(result);
         return 1;
 
     }
@@ -119,15 +114,17 @@ public class ReviewService {
     public int deleteReview(ReviewDTO reviewDto){
         ReviewEntity reviewEntity = reviewRepository.findById(reviewDto.getReviewId()).orElse(null);
         PlaceEntity placeEntity = placeRepository.findById(reviewDto.getPlaceId()).orElse(null);
+        UserEntity userEntity = userRepository.findById(reviewDto.getUserId()).orElse(null);
 
         if(reviewEntity == null){
+            //reviewEntity log
             return 0;
         }
 
         //벌었던 점수 글 존재, 사진존재 따라 -1 , -2
         //처음 등록한 장소 확인 -1
         //등록할때 처음 등록한 장소
-        int point = -1; // content는 빈값이 있으면 안되니까
+        int point = userEntity.getPoint()-1; // 리뷰 등록이 1점
         point -= reviewEntity.getAttachedPhotoIds().isEmpty()? 0 : 1;
 
         if(placeEntity != null){
@@ -135,13 +132,17 @@ public class ReviewService {
             placeRepository.deleteById(placeEntity.getPlaceId());
         }
 
+
         try{
             reviewRepository.deleteById(reviewDto.getReviewId());
         }
         catch (Exception ex){
+            // 삭제 에러 로그 with ex
             return 0;
         }
 
+        pointService.addPoint(reviewDto.getUserId(),point);
+        reviewHistoryService.deleteReviewHistory(reviewEntity);
         return 1;
     }
 }

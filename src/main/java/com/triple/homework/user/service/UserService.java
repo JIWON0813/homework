@@ -6,11 +6,15 @@ import com.triple.homework.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+
+
 
     public void modifyPoint(String userId, int point){
         UserEntity userEntity = userRepository.findById(userId).orElse(null);
@@ -19,6 +23,7 @@ public class UserService {
         if(userEntity == null){
             // 로그처리
         }
+
 
         userEntity.setPoint(point);
 
@@ -29,6 +34,8 @@ public class UserService {
         UserEntity userEntity = UserEntity.builder()
                 .userId(userDTO.getUserId())
                 .point(userDTO.getPoint())
+                .writeDt(new Date())
+                .modifyDt(new Date())
                 .build();
 
         userRepository.save(userEntity);

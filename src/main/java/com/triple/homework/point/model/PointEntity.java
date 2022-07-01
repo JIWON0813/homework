@@ -1,9 +1,11 @@
-package com.triple.homework.place.model;
-
-import javax.persistence.Entity;
+package com.triple.homework.point.model;
 
 import lombok.*;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
@@ -11,9 +13,9 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "PLACE")
+@Table(name = "POINT")
 @Builder
-public class PlaceEntity {
+public class PointEntity {
 
     @Id
     @Column(name = "PLACE_ID")
